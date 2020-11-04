@@ -7,13 +7,17 @@ export default new Router({
     routes: [
         {
             path: "/",
-            name: "main",
-            component: () =>import("@v/Main")
+            name: "login",
+            component: () =>import("@v/Login")
         },
         {
-            path: '/square',
-            name: 'square',
-            component: ()=>import("@c/square/square")
+            path: '/home',
+            name: 'home',
+            component: ()=>import("@v/Home"),
+            hidden: true,
+            meta: {
+                requireAuth: true
+            },
         },
 
     ]
