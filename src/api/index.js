@@ -9,16 +9,16 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(data => {
 
     if (data.data.code === "0") {
-        Message.success({message: data.data.msg});
+        Message.success({message: data.data.message});
         console.log(data.data.code+"sdd")
     }else {
-        Message.error({message: data.data.msg})
+        Message.error({message: data.data.message})
         return;
     }
     return data;
 }, err => {
     if (err.response.status == 504 || err.response.status == 404) {
-        Message.error({message: '服务器被吃了⊙﹏⊙∥'});
+        Message.error({message: '服务器连接失败⊙﹏⊙∥'});
     } else if (err.response.status == 403) {
         Message.error({message: '权限不足,请联系管理员!'});
     } else if (err.response.status == 401) {

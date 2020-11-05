@@ -13,7 +13,7 @@
     <el-checkbox class="login_remember" v-model="checked"
                  label-position="left">记住密码</el-checkbox>
     <el-form-item style="width: 100%">
-      <el-button type="primary" style="width: 100%" @click="submitClick">登录</el-button>
+      <el-button type="primary" style="width: 100%;" @click="submitClick">登录</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -43,8 +43,9 @@
         }).then(resp=> {
           _this.loading = false;
           if (resp && resp.status == 200) {
+
             var data = resp.data;
-            _this.$store.commit('login', data.obj);
+            _this.$store.commit('login', data.data);
             var path = _this.$route.query.redirect;
             _this.$router
               .replace({path: path == '/' || path == undefined ? '/home' : path});
@@ -74,4 +75,5 @@
     margin: 0px 0px 35px 0px;
     text-align: left;
   }
+
 </style>
