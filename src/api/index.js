@@ -10,7 +10,6 @@ axios.interceptors.response.use(data => {
 
     if (data.data.code === "0") {
         Message.success({message: data.data.message});
-        console.log(data.data.code+"sdd")
     }else {
         Message.error({message: data.data.message})
         return;

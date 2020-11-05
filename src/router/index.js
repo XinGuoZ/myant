@@ -8,12 +8,12 @@ export default new Router({
         {
             path: "/",
             name: "login",
-            component: () =>import("@v/Login")
+            component: () =>import("@c/Login/Login")
         },
         {
             path: '/home',
             name: 'home',
-            component: ()=>import("@v/Home"),
+            component: ()=>import("@c/Home/Home"),
             hidden: true,
             meta: {
                 requireAuth: true
