@@ -9,7 +9,6 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(data => {
 
     if (data.data.code === "0") {
-        Message.success({message: data.data.message});
     }else {
         Message.error({message: data.data.message})
         return;
@@ -50,6 +49,18 @@ export const postRequest = (url, params) => {
         }
     });
 }
+
+export const postRequestJson = (url, params) => {
+    return axios({
+        method: 'post',
+        url: `${base}${url}`,
+        data: params,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
+
 export const uploadFileRequest = (url, params) => {
     return axios({
         method: 'post',

@@ -4,6 +4,7 @@ import ElementUI from "element-ui";
 import router from '@/router'
 import {getRequest} from '@/api'
 import {postRequest} from '@/api'
+import {postRequestJson} from '@/api'
 import {deleteRequest} from '@/api'
 import {putRequest} from '@/api'
 import store from './store'
@@ -13,6 +14,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.prototype.getRequest = getRequest;
 Vue.prototype.postRequest = postRequest;
+Vue.prototype.postRequestJson = postRequestJson;
 Vue.prototype.deleteRequest = deleteRequest;
 Vue.prototype.putRequest = putRequest;
 router.beforeEach((to, from, next)=> {

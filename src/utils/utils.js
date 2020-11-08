@@ -41,7 +41,7 @@ export const formatRoutes = (routes)=> {
         let fmRouter = {
             path: path,
             component(resolve){
-                require(['../components/' + component + '.vue'], resolve)
+                require(['../components/' +component+"/"+ component + '.vue'], resolve)
                 /*if (component.startsWith("Home")) {
                     require(['../components/' + component + '.vue'], resolve)
                 } else if (component.startsWith("Emp")) {
