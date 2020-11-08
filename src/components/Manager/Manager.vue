@@ -13,7 +13,7 @@
                         :expand-on-click-node="false"
                         >
                         <span class="custom-tree-node" slot-scope="{ node, data }">
-                            <span @click="getUsers(data)">{{ node.label }}</span>
+                            <span @click="getUsers(data,culpage,pagesize)">{{ node.label }}</span>
                             <span>
                             <el-button
                                 type="text"
@@ -31,7 +31,7 @@
                         </span>
                         </el-tree>
                     </div>
-                
+
             </el-aside>
 
             <el-container>
@@ -45,21 +45,19 @@
                         </el-dropdown-menu>
                         <span >{{groupName}}</span>
                     </el-dropdown>
-                    
+
                 </el-header>
 
                 <el-main>
-                    <el-table :data="userData">
+                    <el-table :data="userData.list">
                         <el-table-column  label="头像" width="140">
                              <template slot-scope="scope">
                                  <el-col :span="12">
-                                    
                                     <div class="demo-basic--circle">
                                         <div class="block"><el-avatar shape="square" :size="50" :src="scope.row.userface"></el-avatar></div>
-                                        <div class="block" v-for="size in sizeList" :key="size">
-                                        </div>
+
                                     </div>
-                                </el-col> 
+                                </el-col>
                             </template>
                         </el-table-column>
                         <el-table-column prop="name" label="姓名" width="120">
@@ -74,8 +72,31 @@
                         </el-table-column>
                         <el-table-column prop="createAt" label="日期" width="140">
                         </el-table-column>
-                    
+                        <el-table-column label="操作">
+                            <template slot-scope="scope">
+                                <el-button
+                                        size="mini"
+                                        @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                                <el-button
+                                        size="mini"
+                                        type="danger"
+                                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+
                     </el-table>
+                    <div class="block">
+
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page=culpage
+                                :page-sizes="[10, 50, 100, 200]"
+                                :page-size=pagesize
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="userData.totalSize">
+                        </el-pagination>
+                    </div>
                 </el-main>
             </el-container>
         </el-container>
@@ -97,9 +118,11 @@
                     label: 'name',
                     id: 'id'
                 },
-                userData:[]
+                userData:{},
+                pagesize:10,
+                culpage:1
             }
-               
+
         },
         methods:{
             loadGroupList() {
@@ -108,7 +131,6 @@
                 })
             },
              remove(node, data) {
-
                  this.$confirm('是否删除', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -123,13 +145,12 @@
                 })
             },
              append(data) {
-               
                 this.$prompt('请输名称', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     }).then(({ value }) => {
                         debugger
-                       
+
                         const queryParam  = {name:value,parentId:data.id};
                         this.postRequestJson('api/tg/group/addGroup',queryParam).then(resp=>{
                              const newChild = { id: resp.data.data.id,name:value,childGroup: [] };
@@ -138,7 +159,7 @@
                             }
                             data.childGroup.push(newChild);
                         })
-                       
+
                         this.$message({
                             type: 'success',
                             message: '请输名称: ' + value
@@ -147,22 +168,33 @@
                         this.$message({
                             type: 'info',
                             message: '取消输入'
-                        });       
+                        });
                     });
-               
+
             },
-            getUsers(data) {
+            getUsers(data,currentPage, pageSize) {
                 this.groupNameId = data.id
                 this.groupName = data.name
-                this.getRequest('api/tg/userInfo/getUsersByDeptId/'+data.id).then(resp=>{
+                const param = {id:data.id,currentPage:currentPage, pageSize:pageSize}
+                this.postRequestJson('api/tg/userInfo/getUsersByDeptId', param).then(resp=>{
                     this.userData = resp.data.data
                 })
+            },
+            handleSizeChange(val) {
+                this.pagesize = val
+                const param = {id:this.groupNameId}
+                this.getUsers(param, this.culpage,this.pagesize)
+            },
+            handleCurrentChange(val) {
+                this.culpage = val
+                const param = {id:this.groupNameId}
+                this.getUsers(param, this.culpage,this.pagesize)
             }
       },
         created(){
             this.loadGroupList()
         },
-        
+
     }
 
 
